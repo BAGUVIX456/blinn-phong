@@ -88,7 +88,7 @@ unsigned int loadCubemap(vector<string> faces)
         cout << "Loading cubemap at path: " << faces[i] << endl;
         if (data)
         {
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             stbi_image_free(data);
         }
         else
@@ -200,12 +200,12 @@ int main()
 
     vector<string> faces
     {
-        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/jpg/right.jpg",
-        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/jpg/left.jpg",
-        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/jpg/top.jpg",
-        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/jpg/bottom.jpg",
-        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/jpg/front.jpg",
-        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/jpg/back.jpg"
+        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/right.png",
+        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/left.png",
+        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/top.png",
+        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/bottom.png",
+        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/front.png",
+        "/home/dhanvith/Programming/OpenGL/blinn-phong/resources/skybox/back.png"
     };
 
     unsigned int skyboxTexture = loadCubemap(faces);
