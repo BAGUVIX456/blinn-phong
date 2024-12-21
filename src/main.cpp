@@ -5,6 +5,8 @@
 
 #include <glm/ext/matrix_float3x3.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/vector_float3.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -27,6 +29,8 @@ bool firstMouse = true;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+glm::vec3 lightPos(10.0f, 10.0f, 0.0f);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -139,10 +143,10 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    Shader shaderProgram("shaders/shader.vert.glsl", "shaders/shader.frag.glsl");
+    Shader lightShader("shaders/light.vert.glsl", "shaders/light.frag.glsl");
     Shader skyboxShader("shaders/skybox.vert.glsl", "shaders/skybox.frag.glsl");
 
-    float skyboxVertices[] = 
+    float boxVertices[] = 
     {
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,
@@ -187,13 +191,13 @@ int main()
          1.0f, -1.0f,  1.0f
     };
 
-    unsigned int skyboxVAO, skyboxVBO;
+    unsigned int skyboxVAO, boxVBO;
     glGenVertexArrays(1, &skyboxVAO);
-    glGenBuffers(1, &skyboxVBO);
+    glGenBuffers(1, &boxVBO);
 
     glBindVertexArray(skyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -210,12 +214,19 @@ int main()
 
     unsigned int skyboxTexture = loadCubemap(faces);
 
-    shaderProgram.use();
-    shaderProgram.setVec3("light.position", 0.0f, 0.0f, 0.0f);
-    shaderProgram.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-    shaderProgram.setVec3("light.diffuse", 0.0f, 0.0f, 0.0f);
-    shaderProgram.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
-    shaderProgram.setFloat("material.shininess", 64);
+    unsigned int lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+
+    glBindVertexArray(lightVAO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // shaderProgram.use();
+    // shaderProgram.setVec3("light.position", 0.0f, 0.0f, 0.0f);
+    // shaderProgram.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
+    // shaderProgram.setVec3("light.diffuse", 0.0f, 0.0f, 0.0f);
+    // shaderProgram.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
+    // shaderProgram.setFloat("material.shininess", 64);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -225,9 +236,9 @@ int main()
 
         processInput(window);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shaderProgram.use();
+        skyboxShader.use();
 
         glm::mat4 model = glm::mat4(1.0f);
 
@@ -236,7 +247,7 @@ int main()
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
 
         glDepthMask(GL_FALSE);
-        skyboxShader.use();
+
         skyboxShader.setMat4("view", view);
         skyboxShader.setMat4("projection", projection);
 
@@ -246,12 +257,26 @@ int main()
 
         glDepthMask(GL_TRUE);
 
+        lightShader.use();
+
+        model = glm::translate(model, lightPos);
+        // model = glm::scale(model, glm::vec3(0.2f));
+
+        view = camera.GetViewMatrix();
+
+        lightShader.setMat4("model", model);
+        lightShader.setMat4("view", view);
+        lightShader.setMat4("projection", projection);
+
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     glDeleteVertexArrays(1, &skyboxVAO);
-    glDeleteBuffers(1, &skyboxVBO);
+    glDeleteBuffers(1, &boxVBO);
 
     glfwTerminate();
     return 0;
