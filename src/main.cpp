@@ -9,12 +9,11 @@
 
 #include "shader/shader.hpp"
 #include "camera/camera.hpp"
-#include "model/model.h"
 
 #include <iostream>
 
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -101,10 +100,8 @@ int main()
 
     stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
 
     Shader shaderProgram("shaders/shader.vert.glsl", "shaders/shader.frag.glsl");
-    Model bagModel("<ABSOLUTE PATH TO MODEL>");
 
     shaderProgram.use();
     shaderProgram.setVec3("light.position", 0.0f, 0.0f, 0.0f);
@@ -133,8 +130,6 @@ int main()
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
         shaderProgram.setMat4("projection", projection);
-
-        bagModel.Draw(shaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

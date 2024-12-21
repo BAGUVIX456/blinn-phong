@@ -11,7 +11,7 @@ BUILD := build
 run: $(OUT)
 	./$(BUILD)/$(OUT)
 
-$(OUT): $(SRC)/gl.cpp $(SHADER) $(MODEL) $(SRC)/glad.c $(MESH)
+$(OUT): $(SRC)/main.cpp $(SHADER) $(MODEL) $(SRC)/glad.c $(MESH)
 	if [ ! -d "$(BUILD)" ]; then mkdir $(BUILD); fi
 	$(CXX) $^ $(LINKER) -o $(BUILD)/$(OUT)
 
