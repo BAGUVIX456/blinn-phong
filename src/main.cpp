@@ -3,20 +3,13 @@
 
 #include "stb_image.h"
 
-#include <glm/ext/matrix_float3x3.hpp>
-#include <glm/ext/matrix_float4x4.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <glm/ext/vector_float3.hpp>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "shader/shader.hpp"
 #include "camera/camera.hpp"
 #include "model/model.h"
 
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -31,7 +24,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-glm::vec3 lightPos(10.0f, 10.0f, 0.0f);
+glm::vec3 lightPos(10.0f, -5.0f, -5.0f);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -144,7 +137,6 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    Shader lightShader("shaders/light.vert.glsl", "shaders/light.frag.glsl");
     Shader skyboxShader("shaders/skybox.vert.glsl", "shaders/skybox.frag.glsl");
     Shader earthShader("shaders/shader.vert.glsl", "shaders/shader.frag.glsl");
 
@@ -226,9 +218,9 @@ int main()
     Model earth("/home/dhanvith/Programming/OpenGL/blinn-phong/resources/earth/earth_mine.obj");
 
     earthShader.use();
-    earthShader.setVec3("light.position", lightPos);
-    earthShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-    earthShader.setVec3("light.diffuse", 0.0f, 0.0f, 0.0f);
+    earthShader.setVec3("lightPos", lightPos);
+    earthShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
+    earthShader.setVec3("light.diffuse", 3.0f, 3.0f, 3.0f);
     earthShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
     earthShader.setFloat("material.shininess", 64);
 
@@ -270,7 +262,6 @@ int main()
         earthShader.setMat4("model", model);
         earthShader.setMat4("view", view);
         earthShader.setMat4("projection", projection);
-        // earthShader.setVec3("lightPos", lightPos);
 
         earth.Draw(earthShader);
 
