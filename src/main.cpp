@@ -13,6 +13,7 @@
 
 #include "shader/shader.hpp"
 #include "camera/camera.hpp"
+#include "model/model.h"
 
 #include <iostream>
 #include <vector>
@@ -118,7 +119,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "blinn-phong", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -145,6 +146,7 @@ int main()
 
     Shader lightShader("shaders/light.vert.glsl", "shaders/light.frag.glsl");
     Shader skyboxShader("shaders/skybox.vert.glsl", "shaders/skybox.frag.glsl");
+    Shader earthShader("shaders/shader.vert.glsl", "shaders/shader.frag.glsl");
 
     float boxVertices[] = 
     {
@@ -221,12 +223,14 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // shaderProgram.use();
-    // shaderProgram.setVec3("light.position", 0.0f, 0.0f, 0.0f);
-    // shaderProgram.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-    // shaderProgram.setVec3("light.diffuse", 0.0f, 0.0f, 0.0f);
-    // shaderProgram.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
-    // shaderProgram.setFloat("material.shininess", 64);
+    Model earth("/home/dhanvith/Programming/OpenGL/blinn-phong/resources/earth/earth_mine.obj");
+
+    earthShader.use();
+    earthShader.setVec3("light.position", lightPos);
+    earthShader.setVec3("light.ambient", 0.0f, 0.0f, 0.0f);
+    earthShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+    earthShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
+    earthShader.setFloat("material.shininess", 64);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -270,6 +274,17 @@ int main()
 
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        earthShader.use();
+
+        model = glm::mat4(1.0f);
+
+        earthShader.setMat4("model", model);
+        earthShader.setMat4("view", view);
+        earthShader.setMat4("projection", projection);
+        // earthShader.setVec3("lightPos", lightPos);
+
+        earth.Draw(earthShader);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
