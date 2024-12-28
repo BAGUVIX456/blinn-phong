@@ -193,12 +193,12 @@ int main()
          1.0f, -1.0f,  1.0f
     };
 
-    unsigned int skyboxVAO, boxVBO;
+    unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
-    glGenBuffers(1, &boxVBO);
+    glGenBuffers(1, &skyboxVBO);
 
     glBindVertexArray(skyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -227,10 +227,12 @@ int main()
 
     earthShader.use();
     earthShader.setVec3("light.position", lightPos);
-    earthShader.setVec3("light.ambient", 0.0f, 0.0f, 0.0f);
-    earthShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+    earthShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
+    earthShader.setVec3("light.diffuse", 0.0f, 0.0f, 0.0f);
     earthShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
     earthShader.setFloat("material.shininess", 64);
+
+    glm::mat4 model = glm::mat4(1.0f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -244,10 +246,7 @@ int main()
 
         skyboxShader.use();
 
-        glm::mat4 model = glm::mat4(1.0f);
-
         glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
 
         glDepthMask(GL_FALSE);
@@ -261,23 +260,12 @@ int main()
 
         glDepthMask(GL_TRUE);
 
-        lightShader.use();
-
-        model = glm::translate(model, lightPos);
-        // model = glm::scale(model, glm::vec3(0.2f));
-
-        view = camera.GetViewMatrix();
-
-        lightShader.setMat4("model", model);
-        lightShader.setMat4("view", view);
-        lightShader.setMat4("projection", projection);
-
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
         earthShader.use();
 
-        model = glm::mat4(1.0f);
+        float rotation_speed = 0.1f;
+
+        model = glm::rotate(model, rotation_speed * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+        view = camera.GetViewMatrix();
 
         earthShader.setMat4("model", model);
         earthShader.setMat4("view", view);
@@ -291,7 +279,7 @@ int main()
     }
 
     glDeleteVertexArrays(1, &skyboxVAO);
-    glDeleteBuffers(1, &boxVBO);
+    glDeleteBuffers(1, &skyboxVBO);
 
     glfwTerminate();
     return 0;
