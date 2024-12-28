@@ -222,9 +222,9 @@ int main()
     earthShader.use();
     earthShader.setVec3("lightPos", lightPos);
     earthShader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
-    earthShader.setVec3("light.diffuse", 2.0f, 2.0f, 2.0f);
-    earthShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
-    earthShader.setFloat("material.shininess", 64);
+    earthShader.setVec3("light.diffuse", 1.5f, 1.5f, 1.5f);
+    earthShader.setVec3("light.specular", 0.1f, 0.1f, 0.1f);
+    earthShader.setFloat("material.shininess", 16);
 
     glm::mat4 model = glm::mat4(1.0f);
 
@@ -256,7 +256,7 @@ int main()
 
         earthShader.use();
 
-        float rotation_speed = 0.1f;
+        float rotation_speed = 0.08f;
 
         model = glm::rotate(model, rotation_speed * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
         view = camera.GetViewMatrix();
