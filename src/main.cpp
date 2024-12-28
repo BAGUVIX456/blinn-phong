@@ -13,8 +13,8 @@
 
 using namespace std;
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -111,6 +111,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "blinn-phong", NULL, NULL);
     if (window == NULL)
@@ -135,6 +136,7 @@ int main()
 
     // stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
     glDepthFunc(GL_LEQUAL);
 
     Shader skyboxShader("shaders/skybox.vert.glsl", "shaders/skybox.frag.glsl");
@@ -219,8 +221,8 @@ int main()
 
     earthShader.use();
     earthShader.setVec3("lightPos", lightPos);
-    earthShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
-    earthShader.setVec3("light.diffuse", 3.0f, 3.0f, 3.0f);
+    earthShader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
+    earthShader.setVec3("light.diffuse", 2.0f, 2.0f, 2.0f);
     earthShader.setVec3("light.specular", 0.0f, 0.0f, 0.0f);
     earthShader.setFloat("material.shininess", 64);
 
