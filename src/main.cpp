@@ -3,12 +3,14 @@
 
 #include "stb_image.h"
 
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
 #include "shader/shader.hpp"
 #include "camera/camera.hpp"
 #include "model/model.h"
 
+#include <glm/matrix.hpp>
 #include <iostream>
 
 using namespace std;
@@ -223,9 +225,10 @@ int main()
     earthShader.setVec3("lightPos", lightPos);
     earthShader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
     // earthShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-    earthShader.setVec3("light.diffuse", 1.5f, 1.5f, 1.5f);
+    earthShader.setVec3("light.diffuse", 1.3f, 1.3f, 1.3f);
     earthShader.setVec3("light.specular", 0.1f, 0.1f, 0.1f);
-    earthShader.setFloat("material.shininess", 16);
+    // earthShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+    earthShader.setFloat("material.shininess", 64);
 
     glm::mat4 model = glm::mat4(1.0f);
 

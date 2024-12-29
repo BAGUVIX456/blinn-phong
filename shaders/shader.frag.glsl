@@ -24,9 +24,6 @@ in vec3 LightPos;
 
 out vec4 FragColor;
 
-// uniform vec3 objectColour;
-// uniform vec3 lightColour;
-
 uniform Material material;
 uniform Light light;
 
@@ -40,8 +37,8 @@ void main()
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.texture_diffuse1, TexCoords));
 
     vec3 viewDir = normalize(-FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float spec = pow(max(dot(viewDir, halfwayDir), 0.0), material.shininess);
     vec3 specular = light.specular * spec * vec3(texture(material.texture_specular1, TexCoords));
 
     vec3 result = ambient + diffuse + specular;
