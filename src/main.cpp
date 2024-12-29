@@ -139,6 +139,7 @@ int main()
     // stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
+    glEnable(GL_FRAMEBUFFER_SRGB);
     glDepthFunc(GL_LEQUAL);
 
     Shader skyboxShader("shaders/skybox.vert.glsl", "shaders/skybox.frag.glsl");
@@ -223,10 +224,10 @@ int main()
 
     earthShader.use();
     earthShader.setVec3("lightPos", lightPos);
-    earthShader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
+    earthShader.setVec3("light.ambient", 0.01f, 0.01f, 0.01f);
     // earthShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-    earthShader.setVec3("light.diffuse", 1.3f, 1.3f, 1.3f);
-    earthShader.setVec3("light.specular", 0.1f, 0.1f, 0.1f);
+    earthShader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
+    earthShader.setVec3("light.specular", 0.05f, 0.05f, 0.05f);
     // earthShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
     earthShader.setFloat("material.shininess", 64);
 
