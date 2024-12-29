@@ -217,11 +217,12 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    Model earth("/home/dhanvith/Programming/OpenGL/blinn-phong/resources/earth/earth_mine.obj");
+    Model earth("/home/dhanvith/Programming/OpenGL/blinn-phong/resources/earth/earth.obj");
 
     earthShader.use();
     earthShader.setVec3("lightPos", lightPos);
     earthShader.setVec3("light.ambient", 0.05f, 0.05f, 0.05f);
+    // earthShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
     earthShader.setVec3("light.diffuse", 1.5f, 1.5f, 1.5f);
     earthShader.setVec3("light.specular", 0.1f, 0.1f, 0.1f);
     earthShader.setFloat("material.shininess", 16);

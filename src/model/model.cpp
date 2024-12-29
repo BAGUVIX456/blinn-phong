@@ -1,5 +1,6 @@
 #include "model.h"
 
+#include <assimp/material.h>
 #include <iostream>
 
 #include <assimp/Importer.hpp>
@@ -101,6 +102,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
         vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+        vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     }
 
     return Mesh(vertices, indices, textures);

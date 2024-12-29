@@ -4,6 +4,7 @@ struct Material
 {
     sampler2D texture_diffuse1;
     sampler2D texture_specular1;
+    sampler2D texture_normal1;
     float shininess;
 };
 
@@ -32,7 +33,6 @@ uniform Light light;
 void main()
 {
     vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, TexCoords));
-    // vec3 ambient = light.ambient * normalize(Normal);
 
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(LightPos - FragPos);
