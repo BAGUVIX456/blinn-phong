@@ -139,7 +139,7 @@ int main()
     // stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
-    glEnable(GL_FRAMEBUFFER_SRGB);
+    // glEnable(GL_FRAMEBUFFER_SRGB);
     glDepthFunc(GL_LEQUAL);
 
     Shader skyboxShader("shaders/skybox.vert.glsl", "shaders/skybox.frag.glsl");
@@ -226,8 +226,9 @@ int main()
     earthShader.setVec3("lightPos", lightPos);
     earthShader.setVec3("light.ambient", 0.01f, 0.01f, 0.01f);
     // earthShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-    earthShader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
+    earthShader.setVec3("light.diffuse", 1.65f, 1.65f, 1.65f);
     earthShader.setVec3("light.specular", 0.05f, 0.05f, 0.05f);
+    earthShader.setVec3("light.emission", 0.6f, 0.6f, 0.6f);
     // earthShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
     earthShader.setFloat("material.shininess", 64);
 
@@ -261,7 +262,7 @@ int main()
 
         earthShader.use();
 
-        float rotation_speed = 0.08f;
+        float rotation_speed = 0.05f;
 
         model = glm::rotate(model, rotation_speed * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
         view = camera.GetViewMatrix();
